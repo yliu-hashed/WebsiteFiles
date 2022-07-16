@@ -1061,8 +1061,8 @@ function correctRadius (radius) {
 }
 
 window.addEventListener('mousedown', e => {
-    let posX = scaleByPixelRatio(e.offsetX);
-    let posY = scaleByPixelRatio(e.offsetY);
+    let posX = scaleByPixelRatio(e.pageX);
+    let posY = scaleByPixelRatio(e.pageY);
     let pointer = pointers.find(p => p.id == -1);
     if (pointer == null)
         pointer = new pointerPrototype();
@@ -1072,8 +1072,8 @@ window.addEventListener('mousedown', e => {
 window.addEventListener('mousemove', e => {
     let pointer = pointers[0];
     if (!pointer.down) return;
-    let posX = scaleByPixelRatio(e.offsetX);
-    let posY = scaleByPixelRatio(e.offsetY);
+    let posX = scaleByPixelRatio(e.pageX);
+    let posY = scaleByPixelRatio(e.pageY);
     updatePointerMoveData(pointer, posX, posY);
 });
 
@@ -1087,8 +1087,8 @@ window.addEventListener('touchstart', e => {
     while (touches.length >= pointers.length)
         pointers.push(new pointerPrototype());
     for (let i = 0; i < touches.length; i++) {
-        let posX = scaleByPixelRatio(touches[i].pageX);
-        let posY = scaleByPixelRatio(touches[i].pageY);
+        let posX = scaleByPixelRatio(touches[i].screenX);
+        let posY = scaleByPixelRatio(touches[i].screenY);
         updatePointerDownData(pointers[i + 1], touches[i].identifier, posX, posY);
     }
 });
@@ -1099,8 +1099,8 @@ window.addEventListener('touchmove', e => {
     for (let i = 0; i < touches.length; i++) {
         let pointer = pointers[i + 1];
         if (!pointer.down) continue;
-        let posX = scaleByPixelRatio(touches[i].pageX);
-        let posY = scaleByPixelRatio(touches[i].pageY);
+        let posX = scaleByPixelRatio(touches[i].screenX);
+        let posY = scaleByPixelRatio(touches[i].screenY);
         updatePointerMoveData(pointer, posX, posY);
     }
 }, false);
