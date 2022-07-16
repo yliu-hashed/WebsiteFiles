@@ -1071,9 +1071,9 @@ window.addEventListener('mousedown', e => {
 
 window.addEventListener('mousemove', e => {
     let pointer = pointers[0];
-    if (!pointer.down) return;
     let posX = scaleByPixelRatio(e.clientX);
     let posY = scaleByPixelRatio(e.clientY);
+    if (!pointer.down) updatePointerDownData(pointer, -1, posX, posY);
     updatePointerMoveData(pointer, posX, posY);
 });
 
