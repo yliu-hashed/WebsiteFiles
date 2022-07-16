@@ -63,7 +63,7 @@ function pointerPrototype () {
     this.deltaY = 0;
     this.down = false;
     this.moved = false;
-    this.color = [30, 0, 300];
+    this.color = generateColor();
 }
 
 let pointers = [];
@@ -1073,8 +1073,7 @@ window.addEventListener('mousemove', e => {
     let pointer = pointers[0];
     let posX = scaleByPixelRatio(e.clientX);
     let posY = scaleByPixelRatio(e.clientY);
-    if (!pointer.down) updatePointerDownData(pointer, -1, posX, posY);
-    updatePointerMoveData(pointer, posX, posY);
+    updatePointerMoveData(pointer, posX, posY, pointer.down ? 1 : 0.1);
 });
 
 window.addEventListener('mouseup', () => {
@@ -1101,7 +1100,7 @@ window.addEventListener('touchmove', e => {
         if (!pointer.down) continue;
         let posX = scaleByPixelRatio(touches[i].screenX);
         let posY = scaleByPixelRatio(touches[i].screenY);
-        updatePointerMoveData(pointer, posX, posY);
+        updatePointerMoveData(pointer, posX, posY, 1);
     }
 }, false);
 
@@ -1135,13 +1134,15 @@ function updatePointerDownData (pointer, id, posX, posY) {
     pointer.color = generateColor();
 }
 
-function updatePointerMoveData (pointer, posX, posY) {
-    pointer.prevTexcoordX = pointer.texcoordX;
-    pointer.prevTexcoordY = pointer.texcoordY;
+function updatePointerMoveData (pointer, posX, posY, power) {
+    if (!pointer.moved) {
+        pointer.prevTexcoordX = pointer.texcoordX;
+        pointer.prevTexcoordY = pointer.texcoordY;
+    }
     pointer.texcoordX = posX / canvas.width;
     pointer.texcoordY = 1.0 - posY / canvas.height;
-    pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
-    pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
+    pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX) * power;
+    pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY) * power;
     pointer.moved = Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
 }
 
