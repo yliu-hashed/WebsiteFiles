@@ -70,6 +70,11 @@ let pointers = [];
 let splatStack = [];
 pointers.push(new pointerPrototype());
 
+let shouldSmoke = false;
+let smokePosX = 0;
+let smokePosY = 0;
+let smokeColor = {r: 0, g: 0, b: 0};
+
 const { gl, ext } = getWebGLContext(canvas);
 
 if (isMobile()) {
@@ -889,6 +894,10 @@ function updateColors (dt) {
     }
 }
 
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 function applyInputs () {
     if (splatStack.length > 0)
         multipleSplats(splatStack.pop());
@@ -899,6 +908,19 @@ function applyInputs () {
             splatPointer(p);
         }
     });
+
+    if (shouldSmoke) {
+        const amountOfDirections = 3;
+        const start = Math.random() * 6.283;
+        for (let i = 0; i < amountOfDirections; i++) {
+            const power = 100 + Math.random() * 500;
+            const direction = start + (i * 6.283 / amountOfDirections);
+            const sinPos = Math.sin(direction);
+            const cosPos = Math.cos(direction);
+            splat(smokePosX + sinPos * 0.02, smokePosY  + cosPos * 0.02, sinPos * power, cosPos * power, smokeColor);
+        }
+        shouldSmoke = false;
+    }
 }
 
 function step (dt) {
@@ -1074,6 +1096,20 @@ window.addEventListener('mousemove', e => {
     let posX = scaleByPixelRatio(e.clientX);
     let posY = scaleByPixelRatio(e.clientY);
     updatePointerMoveData(pointer, posX, posY, pointer.down ? 1 : 0.1);
+});
+
+function parseColor(color) {
+    const m = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+    if( m) return {r: m[1] / 255, g: m[2] / 255, b: m[3] / 255};
+}
+
+window.addEventListener('mouseover', e => {
+    if (e.target.getAttribute('smoky') != 'true') { return };
+    const color = window.getComputedStyle(e.target).getPropertyValue('background-color');
+    smokePosX = scaleByPixelRatio(e.clientX) / canvas.width;
+    smokePosY = 1.0 - scaleByPixelRatio(e.clientY) / canvas.height;
+    smokeColor = parseColor(color);
+    shouldSmoke = true;
 });
 
 window.addEventListener('mouseup', () => {
