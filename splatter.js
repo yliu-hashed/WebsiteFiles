@@ -30,7 +30,12 @@ SOFTWARE.
 
 const canvas = document.getElementsByTagName('canvas')[0];
 const thisScript = document.currentScript;
-const hue = thisScript.getAttribute('hue');
+let hue = thisScript.getAttribute('hue');
+if (hue == null) hue = 0;
+let sat = thisScript.getAttribute('sat');
+if (sat == null) sat = 1;
+let val = thisScript.getAttribute('val');
+if (val == null) val = 1;
 
 resizeCanvas();
 
@@ -1199,10 +1204,10 @@ function correctDeltaY (delta) {
 }
 
 function generateColor () {
-    let c = HSVtoRGB(hue, 1.0, 1.0);
-    c.r *= 0.02;
-    c.g *= 0.02;
-    c.b *= 0.02;
+    let c = HSVtoRGB(hue, sat, val);
+    c.r *= 0.03;
+    c.g *= 0.03;
+    c.b *= 0.03;
     return c;
 }
 
