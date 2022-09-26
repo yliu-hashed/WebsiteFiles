@@ -37,12 +37,12 @@ if (sat == null) sat = 0;
 let val = thisScript.getAttribute('val');
 if (val == null) val = 0;
 
-let smkHue = thisScript.getAttribute('smkHue');
-if (smkHue == null) smkHue = 0;
-let smkSat = thisScript.getAttribute('smkSat');
-if (smkSat == null) smkSat = 1;
-let smkVal = thisScript.getAttribute('smkVal');
-if (smkVal == null) smkVal = 1;
+let smkR = thisScript.getAttribute('smkR');
+if (smkR == null) smkR = 0;
+let smkG = thisScript.getAttribute('smkG');
+if (smkG == null) smkG = 1;
+let smkB = thisScript.getAttribute('smkB');
+if (smkB == null) smkB = 1;
 
 resizeCanvas();
 
@@ -1076,11 +1076,8 @@ function correctRadius (radius) {
     return radius;
 }
 
-let smkColor = HSVtoRGB(smkHue, smkSat, smkVal);
-smkColor.r *= 0.15;
-smkColor.g *= 0.15;
-smkColor.b *= 0.15;
 const smoker = document.getElementsByClassName('smoker')[0];
+if (smoker == null) alert('Error, no smoker element found.');
 let lrRatio = smoker.getAttribute('lrRatio');
 if (lrRatio == null) lrRatio = 0;
 let tbRatio = smoker.getAttribute('tbRatio');
@@ -1092,7 +1089,7 @@ var interval = setInterval(function(){
     const box = smoker.getBoundingClientRect();
     const smokerX = scaleByPixelRatio(box.x + lrRatio * box.width) / canvas.width;
     const smokerY = scaleByPixelRatio(box.y + tbRatio * box.height) / canvas.height;
-    splat(smokerX, 1 - smokerY, 0, 50 * power, {r: smkColor.r * power, g: smkColor.g * power, b: smkColor.b * power});
+    splat(smokerX, 1 - smokerY, 0, 50 * power, {r: smkR * power, g: smkG * power, b: smkB * power});
 }, frequency);
 
 window.addEventListener('mousedown', e => {
