@@ -1080,7 +1080,7 @@ let smkColor = HSVtoRGB(smkHue, smkSat, smkVal);
 smkColor.r *= 0.15;
 smkColor.g *= 0.15;
 smkColor.b *= 0.15;
-const smoker = document.getElementById('Smoker')[0];
+const smoker = document.getElementByClass('Smoker')[0];
 let lrRatio = smoker.getAttribute('lrRatio');
 if (lrRatio == null) lrRatio = 0;
 let tbRatio = smoker.getAttribute('tbRatio');
